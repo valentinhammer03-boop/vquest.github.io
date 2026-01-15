@@ -361,9 +361,8 @@
 
     <script>
         // OpenRouter API Key - Get free key from https://openrouter.ai/
-        // Clear old keys first
+        // Clear altes HuggingFace-Token (Legacy, optional)
         localStorage.removeItem('hf_token');
-        localStorage.removeItem('miso_state');
         
         let apiKey = localStorage.getItem('openrouter_key');
         if (!apiKey) {
