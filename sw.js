@@ -1,4 +1,4 @@
-const CACHE_NAME = 'miso-v1';
+const CACHE_NAME = 'miso-v2';
 const ASSETS = [
   '/',
   '/index.html',
@@ -33,18 +33,18 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event - network first, fall back to cache
+// Fetch event - network first for APIs, cache for assets
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests
   if (event.request.method !== 'GET') {
     return;
   }
 
-  // For API calls, use network first with cache fallback
-  if (event.request.url.includes('generativelanguage.googleapis.com')) {
+  // For API calls, always use network first
+  if (event.request.url.includes('openrouter.ai') || 
+      event.request.url.includes('generativelanguage.googleapis.com') ||
+      event.request.url.includes('api-inference.huggingface.co')) {
     event.respondWith(
-      fetch(event.request)
-        .catch(() => caches.match(event.request))
+      fetch(event.request).catch(() => new Response('Offline'))
     );
     return;
   }
@@ -53,7 +53,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
       return response || fetch(event.request).then((response) => {
-        // Cache successful responses
         if (response.ok && event.request.url.startsWith(self.location.origin)) {
           const clonedResponse = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -63,7 +62,6 @@ self.addEventListener('fetch', (event) => {
         return response;
       });
     }).catch(() => {
-      // Fallback for offline - return a basic offline page if needed
       return caches.match('/index.html');
     })
   );
