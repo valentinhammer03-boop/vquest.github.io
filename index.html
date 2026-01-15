@@ -68,8 +68,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 160px;
-            height: 160px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             background-color: transparent;
             user-select: none;
@@ -79,6 +79,14 @@
         }
         
         .loader-wrapper:active { transform: scale(0.9); }
+
+        /* Größerer Loader auf Tablets */
+        @media (min-height: 900px) {
+            .loader-wrapper {
+                width: 160px;
+                height: 160px;
+            }
+        }
 
         .loader {
             position: absolute;
@@ -239,8 +247,35 @@
             border: 1px solid #eee;
         }
 
-        .miso-label { font-weight: 900; font-size: 5rem; letter-spacing: -4px; text-align: center; margin-top: 20px; }
-        #status { font-size: 0.65rem; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; color: #bbb; margin-top: 20px; }
+        .miso-label { 
+            font-weight: 900; 
+            font-size: 2.5rem; 
+            letter-spacing: -2px; 
+            text-align: center; 
+            margin: 10px 0 5px 0;
+            line-height: 1;
+        }
+        
+        #status { 
+            font-size: 0.55rem; 
+            font-weight: 900; 
+            letter-spacing: 2px; 
+            text-transform: uppercase; 
+            color: #bbb; 
+            margin: 5px 0 15px 0;
+        }
+
+        /* Tablet+ größere Schrift */
+        @media (min-height: 900px) {
+            .miso-label {
+                font-size: 4rem;
+                margin-top: 15px;
+            }
+            #status {
+                font-size: 0.65rem;
+                margin-top: 10px;
+            }
+        }
 
         .folders-wrapper { width: 100%; max-height: 35vh; overflow-y: auto; padding-bottom: 20px; }
         .delete-btn { background: none; border: none; color: #ccc; cursor: pointer; font-size: 1.2rem; }
