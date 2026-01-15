@@ -297,6 +297,10 @@
 
     <script>
         // OpenRouter API Key - Get free key from https://openrouter.ai/
+        // Clear old keys first
+        localStorage.removeItem('hf_token');
+        localStorage.removeItem('miso_state');
+        
         let apiKey = localStorage.getItem('openrouter_key');
         if (!apiKey) {
             apiKey = prompt('Bitte gib deinen OpenRouter API Key ein (kostenlos von https://openrouter.ai/keys):', '');
