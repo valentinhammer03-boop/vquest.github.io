@@ -256,6 +256,20 @@
         <div class="trigger-btn" onclick="generateBriefing()">
             <span class="ai-icon">💡</span>
         </div>
+        <div class="trigger-btn" onclick="toggleSettings()">
+            <span style="font-size: 1.2rem;">⚙️</span>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="settings-modal" id="settings-modal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 300; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center;">
+            <h2>Einstellungen</h2>
+            <label>OpenRouter API Key:</label>
+            <input type="password" id="api-key-input" placeholder="sk-or-..." style="width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; box-sizing: border-box;" />
+            <button onclick="saveSettings()" style="width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; background: var(--ai-purple); color: white;">Speichern</button>
+            <button onclick="toggleSettings()" style="width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; background: #eee; color: #333;">Abbrechen</button>
+        </div>
     </div>
 
     <!-- Panels -->
@@ -475,6 +489,30 @@
         function updateCounter() {
             const count = state.calendar.columns.reduce((a, b) => a + b.cards.length, 0);
             document.getElementById('event-count').innerText = count;
+        }
+
+        // Settings Functions
+        function toggleSettings() {
+            const modal = document.getElementById('settings-modal');
+            const input = document.getElementById('api-key-input');
+            if (modal.style.display === 'none') {
+                input.value = localStorage.getItem('openrouter_key') || '';
+                modal.style.display = 'flex';
+            } else {
+                modal.style.display = 'none';
+            }
+        }
+
+        function saveSettings() {
+            const key = document.getElementById('api-key-input').value.trim();
+            if (key) {
+                localStorage.setItem('openrouter_key', key);
+                apiKey = key;
+                toggleSettings();
+                alert('API Key gespeichert!');
+            } else {
+                alert('Bitte einen gültigen Key eingeben.');
+            }
         }
 
         // Service Worker Registration
