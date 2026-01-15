@@ -356,6 +356,12 @@
         </div>
 
         <div id="status">Ready</div>
+
+        <div id="text-fallback-wrapper" style="display:none; width:100%; margin: 10px 0;">
+            <input id="text-fallback-input" type="text" placeholder="Text eingeben..." style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc; font-size:1rem;" />
+            <button onclick="handleTextFallback()" style="margin-top:8px; width:100%; padding:12px; border-radius:10px; border:none; background:var(--ai-purple); color:white; font-weight:bold;">Absenden</button>
+        </div>
+
         <div class="folders-wrapper" id="folders"></div>
     </div>
 
@@ -390,12 +396,22 @@
         }
 
         // --- Voice Logic ---
+
         let recognition = null;
         let isListening = false;
+        let speechSupported = false;
 
         function initRecognition() {
             const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SR) return;
+            if (!SR) {
+                // Fallback: Textfeld anzeigen
+                document.getElementById('text-fallback-wrapper').style.display = 'block';
+                document.getElementById('mic-trigger').style.display = 'none';
+                document.getElementById('status').innerText = "Textmodus (Sprache nicht unterstützt)";
+                speechSupported = false;
+                return;
+            }
+            speechSupported = true;
             recognition = new SR();
             recognition.lang = 'de-DE';
             recognition.onstart = () => {
@@ -412,7 +428,16 @@
         }
 
         function handleMicClick() {
+            if (!speechSupported) return;
             if (isListening) recognition.stop(); else recognition.start();
+        }
+
+        function handleTextFallback() {
+            const val = document.getElementById('text-fallback-input').value.trim();
+            if (val) {
+                handleVoiceInput(val);
+                document.getElementById('text-fallback-input').value = '';
+            }
         }
 
         async function handleVoiceInput(text) {
